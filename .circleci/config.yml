@@ -1,0 +1,182 @@
+version: 2.1
+
+# ──────────────────────────────────────────────────────────────────────────
+# Pipeline CI/CD — CircleCI
+#
+# Flusso:
+#   push → qualsiasi branch  → test-frontend + test-backend
+#   push → main              → + deploy-frontend + deploy-backend
+#
+# Variabili d'ambiente da configurare in:
+#   CircleCI → Project Settings → Environment Variables
+#
+#   VERCEL_TOKEN             – vercel.com → Account Settings → Tokens
+#   VERCEL_ORG_ID            – vercel.com → Team Settings → General → Team ID
+#   VERCEL_PROJECT_ID        – vercel.com → Project Settings → General → Project ID
+#   VITE_API_URL             – URL del backend Render (es. https://security-report-dashboard.onrender.com)
+#   RENDER_DEPLOY_HOOK_URL   – Render → Service → Settings → Deploy Hook
+# ──────────────────────────────────────────────────────────────────────────
+
+jobs:
+
+  # ════════════════════════════════════════════════════════════════════════
+  # QUALITY GATES
+  # ════════════════════════════════════════════════════════════════════════
+
+  test-frontend:
+    docker:
+      - image: cimg/node:22.0
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "frontend/package-lock.json" }}
+            - npm-v1-
+
+      - run:
+          name: Install dependencies
+          working_directory: frontend
+          command: npm ci
+
+      - save_cache:
+          key: npm-v1-{{ checksum "frontend/package-lock.json" }}
+          paths:
+            - frontend/node_modules
+
+      - run:
+          name: TypeScript check
+          working_directory: frontend
+          command: npx tsc --noEmit
+
+      - run:
+          name: Lint
+          working_directory: frontend
+          command: npm run lint
+
+      - run:
+          name: Production build
+          working_directory: frontend
+          command: npm run build
+          environment:
+            VITE_API_URL: $VITE_API_URL
+
+  # ──────────────────────────────────────────────────────────────────────
+
+  test-backend:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - pip-v1-{{ checksum "backend/requirements.txt" }}
+            - pip-v1-
+
+      - run:
+          name: Install dependencies
+          working_directory: backend
+          command: pip install -r requirements.txt
+
+      - save_cache:
+          key: pip-v1-{{ checksum "backend/requirements.txt" }}
+          paths:
+            - ~/.local/lib/python3.12/site-packages
+
+      - run:
+          name: Run pytest (103 tests)
+          working_directory: backend
+          command: python -m pytest -v --tb=short
+
+  # ════════════════════════════════════════════════════════════════════════
+  # DEPLOY  (solo su branch main)
+  # ════════════════════════════════════════════════════════════════════════
+
+  deploy-frontend:
+    docker:
+      - image: cimg/node:22.0
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "frontend/package-lock.json" }}
+
+      - run:
+          name: Install dependencies
+          working_directory: frontend
+          command: npm ci
+
+      - run:
+          name: Install Vercel CLI
+          command: npm install -g vercel@latest
+
+      - run:
+          name: Pull Vercel project settings
+          working_directory: frontend
+          command: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+          environment:
+            VERCEL_ORG_ID: $VERCEL_ORG_ID
+            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+
+      - run:
+          name: Build via Vercel CLI
+          working_directory: frontend
+          command: vercel build --prod --token=$VERCEL_TOKEN
+          environment:
+            VERCEL_ORG_ID: $VERCEL_ORG_ID
+            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+            VITE_API_URL: $VITE_API_URL
+
+      - run:
+          name: Deploy to Vercel production
+          working_directory: frontend
+          command: |
+            URL=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+            echo "✅ Frontend deployed → $URL"
+          environment:
+            VERCEL_ORG_ID: $VERCEL_ORG_ID
+            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+
+  # ──────────────────────────────────────────────────────────────────────
+
+  deploy-backend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Trigger Render deploy hook
+          command: |
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X POST "$RENDER_DEPLOY_HOOK_URL")
+            echo "Render webhook response: HTTP $HTTP_STATUS"
+            if [[ "$HTTP_STATUS" -lt 200 || "$HTTP_STATUS" -ge 300 ]]; then
+              echo "❌ Render deploy hook failed (HTTP $HTTP_STATUS)"
+              exit 1
+            fi
+            echo "✅ Render deploy triggered successfully"
+
+# ──────────────────────────────────────────────────────────────────────────
+# WORKFLOW
+# ──────────────────────────────────────────────────────────────────────────
+
+workflows:
+  ci-cd:
+    jobs:
+      - test-frontend
+      - test-backend
+
+      - deploy-frontend:
+          requires:
+            - test-frontend
+          filters:
+            branches:
+              only: main
+
+      - deploy-backend:
+          requires:
+            - test-backend
+          filters:
+            branches:
+              only: main

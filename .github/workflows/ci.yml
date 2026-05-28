@@ -5,11 +5,10 @@ name: CI / CD
 #   • Every push to main  → quality gates + deploy
 #   • Every PR to main    → quality gates only  (deploy jobs are skipped)
 # ──────────────────────────────────────────────────────────────────────────
+# GitHub Actions disabilitato — pipeline migrata su CircleCI
+# Per riattivare: ripristinare i trigger push/pull_request
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 # Cancel any previous run for the same branch / PR when a new commit is pushed
 concurrency:
