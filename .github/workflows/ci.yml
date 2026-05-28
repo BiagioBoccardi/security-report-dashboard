@@ -181,7 +181,7 @@ jobs:
 
       # Multi-platform builder (amd64 + arm64 for Render/M-series compatibility)
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       # GITHUB_TOKEN is automatically provided — no extra secret needed
       - name: Log in to GitHub Container Registry
