@@ -109,31 +109,28 @@ jobs:
           command: npm ci
 
       - run:
+          name: Verify Vercel env vars
+          command: |
+            echo "VERCEL_TOKEN length: ${#VERCEL_TOKEN}"
+            echo "VERCEL_ORG_ID: $VERCEL_ORG_ID"
+            echo "VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID"
+
+      - run:
           name: Pull Vercel project settings
           working_directory: frontend
-          command: npx vercel@latest pull --yes --environment=production --token="${VERCEL_TOKEN}"
-          environment:
-            VERCEL_ORG_ID: $VERCEL_ORG_ID
-            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
+          command: npx vercel@latest pull --yes --environment=production
 
       - run:
           name: Build via Vercel CLI
           working_directory: frontend
-          command: npx vercel@latest build --prod --token="${VERCEL_TOKEN}"
-          environment:
-            VERCEL_ORG_ID: $VERCEL_ORG_ID
-            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
-            VITE_API_URL: $VITE_API_URL
+          command: npx vercel@latest build --prod
 
       - run:
           name: Deploy to Vercel production
           working_directory: frontend
           command: |
-            URL=$(npx vercel@latest deploy --prebuilt --prod --token="${VERCEL_TOKEN}")
+            URL=$(npx vercel@latest deploy --prebuilt --prod)
             echo "✅ Frontend deployed → $URL"
-          environment:
-            VERCEL_ORG_ID: $VERCEL_ORG_ID
-            VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
 
   # ──────────────────────────────────────────────────────────────────────
 
