@@ -111,7 +111,7 @@ jobs:
       - run:
           name: Pull Vercel project settings
           working_directory: frontend
-          command: npx vercel@latest pull --yes --environment=production --token=$VERCEL_TOKEN
+          command: npx vercel@latest pull --yes --environment=production --token="${VERCEL_TOKEN}"
           environment:
             VERCEL_ORG_ID: $VERCEL_ORG_ID
             VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
@@ -119,7 +119,7 @@ jobs:
       - run:
           name: Build via Vercel CLI
           working_directory: frontend
-          command: npx vercel@latest build --prod --token=$VERCEL_TOKEN
+          command: npx vercel@latest build --prod --token="${VERCEL_TOKEN}"
           environment:
             VERCEL_ORG_ID: $VERCEL_ORG_ID
             VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID
@@ -129,7 +129,7 @@ jobs:
           name: Deploy to Vercel production
           working_directory: frontend
           command: |
-            URL=$(npx vercel@latest deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+            URL=$(npx vercel@latest deploy --prebuilt --prod --token="${VERCEL_TOKEN}")
             echo "✅ Frontend deployed → $URL"
           environment:
             VERCEL_ORG_ID: $VERCEL_ORG_ID
