@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
-  PolarRadiusAxis, Tooltip, ResponsiveContainer, Legend,
+  PolarRadiusAxis, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import type { SecurityReport } from '@/types/report'
 
