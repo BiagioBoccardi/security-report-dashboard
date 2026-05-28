@@ -198,4 +198,4 @@ API_PORT=8000
 
 ---
 
-*Sviluppato per Digimetrica S.r.l. come technical assessment — Marzo 2024*
+*Sviluppato per Digimetrica S.r.l. come technical assessment — Maggio 2026*
