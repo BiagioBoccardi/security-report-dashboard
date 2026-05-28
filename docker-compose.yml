@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # Empty → frontend uses relative URLs proxied by Vite to the backend service
+      - VITE_API_URL=
+      # Vite proxy target — uses Docker service name, not localhost
+      - API_PROXY_TARGET=http://backend:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules   # keep container node_modules, don't overwrite with host
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

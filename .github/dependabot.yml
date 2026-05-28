@@ -1,0 +1,53 @@
+version: 2
+updates:
+
+  # ── Frontend npm packages ──────────────────────────────────────────────
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Rome
+    # Group related packages into single PRs to reduce noise
+    groups:
+      react-ecosystem:
+        patterns: ["react", "react-*", "@types/react*"]
+      vite-toolchain:
+        patterns: ["vite", "@vitejs/*", "typescript", "@types/node"]
+      tailwind:
+        patterns: ["tailwindcss", "postcss", "autoprefixer"]
+      recharts:
+        patterns: ["recharts"]
+      linting:
+        patterns: ["eslint*", "@typescript-eslint/*", "prettier*"]
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "frontend"
+
+  # ── Backend Python packages ────────────────────────────────────────────
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Rome
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "backend"
+
+  # ── GitHub Actions ─────────────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Rome
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "ci/cd"

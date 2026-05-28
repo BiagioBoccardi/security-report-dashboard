@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node
+node_modules/
+npm-debug.log
+.npm
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Dist
+dist/
+build/
+
+# Report data (keep sample, ignore real client data)
+backend/data/*.json
+!backend/data/cybersonar-report.json
+!backend/data/sample-report-medium.json
+
+# OS
+.DS_Store
+Thumbs.db

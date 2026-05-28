@@ -1,0 +1,124 @@
+{
+  "status": "success",
+  "results": [
+    {
+      "idsummary": "a4f82c1e-3b17-4d9a-c82e-1f0e3a7b9d45",
+      "summary_text": "**Riepilogo Esecutivo della Vulnerabilità per \"essprimo.it\"**\n\nIl dominio \"essprimo.it\" presenta una situazione di sicurezza di livello medio, con un punteggio di rischio di 45 su 100. Sono presenti alcune vulnerabilità che richiedono attenzione, ma la superficie di attacco è contenuta rispetto a scenari critici.\n\n**Vulnerabilità:**\n- Totale vulnerabilità rilevate: 38, senza vulnerabilità critiche attive. Sono presenti 4 vulnerabilità alte passive, 12 di livello medio e 22 informative. Nessuna vulnerabilità di livello basso rilevata.\n\n**Esposizione dei Servizi:**\n- Identificati 27 asset totali con 12 indirizzi IPv4 e 5 IPv6 unici. Le porte più esposte includono la porta 443 (18 istanze) e la porta 80 (12 istanze). L'esposizione è contenuta e le porte ad alto rischio risultano filtrate.\n\n**Fuga di Dati:**\n- Le fughe di dati sono limitate: 3 potential_stealer non risolti e 2 other_stealer. Nessuna fuga relativa a domain_stealer rilevata, il che indica una buona gestione delle credenziali principali.\n\n**Certificati e Tecnologia:**\n- La gestione dei certificati è adeguata con 22 certificati attivi e soli 3 scaduti. È attivo un CDN su 8 asset, riducendo significativamente l'esposizione ad attacchi DDoS. Il WAF è presente su 6 asset.\n\n**Sicurezza Email:**\n- La sicurezza email è ben configurata: la politica DMARC è impostata su \"reject\", offrendo protezione ottimale contro lo spoofing. Nessuna presenza in blacklist rilevata.",
+      "summary_text_en": "**Executive Summary of Vulnerability for \"essprimo.it\"**\n\nThe domain \"essprimo.it\" presents a medium-level security situation, with a risk score of 45 out of 100. Some vulnerabilities require attention, but the attack surface is contained compared to critical scenarios.\n\n**Vulnerability:**\n- Total vulnerabilities detected: 38, with no active critical vulnerabilities. There are 4 high-level passive vulnerabilities, 12 medium-level, and 22 informational. No low-level vulnerabilities detected.\n\n**Exposure of Services:**\n- Identified 27 total assets with 12 unique IPv4 and 5 IPv6 addresses. The most exposed ports include port 443 (18 instances) and port 80 (12 instances). Exposure is contained and high-risk ports are filtered.\n\n**Data Leakage:**\n- Data leaks are limited: 3 unresolved potential_stealers and 2 other_stealers. No domain_stealer leaks detected, indicating good management of primary credentials.\n\n**Certificates and Technology:**\n- Certificate management is adequate with 22 active certificates and only 3 expired. A CDN is active on 8 assets, significantly reducing exposure to DDoS attacks. WAF is present on 6 assets.\n\n**Email Security:**\n- Email security is well configured: DMARC policy is set to \"reject\", providing optimal protection against spoofing. No blacklist presence detected.",
+      "risk_score": "45",
+      "creation_date": "2024-04-15 10:32:17",
+      "last_edit": "2024-04-16 09:15:03",
+      "domain_name": "essprimo.it",
+      "servizi_esposti_score": 42,
+      "dataleak_score": 38,
+      "rapporto_leak_email_score": 15,
+      "spoofing_score": 10,
+      "open_ports_score": 0,
+      "blacklist_score": 20,
+      "vulnerability_score_active": 30,
+      "vulnerability_score_passive": 55,
+      "certificate_score": 22,
+      "n_port": {
+        "80": {
+          "n": 12
+        },
+        "443": {
+          "n": 18
+        },
+        "8080": {
+          "n": 3
+        },
+        "25": {
+          "n": 4
+        },
+        "587": {
+          "n": 4
+        }
+      },
+      "n_cert_attivi": 22,
+      "n_cert_scaduti": 3,
+      "n_asset": 27,
+      "n_similar_domains": 4,
+      "email_security": {
+        "spoofable": "Spoofing not possible.",
+        "dmarc_policy": "reject",
+        "blacklist_detections": 0,
+        "blacklist_total_list": 60,
+        "blacklist_detected_list": []
+      },
+      "n_dataleak": {
+        "total": {
+          "vip": 0,
+          "domain_stealer": 0,
+          "potential_stealer": 8,
+          "other_stealer": 3,
+          "general_leak": 0
+        },
+        "resolved": {
+          "vip": 0,
+          "domain_stealer": 0,
+          "potential_stealer": 5,
+          "other_stealer": 1,
+          "general_leak": 0
+        },
+        "unresolved": {
+          "vip": 0,
+          "domain_stealer": 0,
+          "potential_stealer": 3,
+          "other_stealer": 2,
+          "general_leak": 0
+        },
+        "enumeration": 1
+      },
+      "n_vulns": {
+        "total": {
+          "critical": 0,
+          "high": 4,
+          "medium": 12,
+          "low": 0,
+          "info": 22
+        },
+        "active": {
+          "critical": 0,
+          "high": 0,
+          "medium": 3,
+          "low": 0,
+          "info": 22
+        },
+        "passive": {
+          "critical": 0,
+          "high": 4,
+          "medium": 9,
+          "low": 0,
+          "info": 0
+        }
+      },
+      "waf": {
+        "count": 6,
+        "assets": [
+          "e1a23456-789b-4cde-f012-3456789abcde",
+          "f2b34567-890c-4def-0123-456789abcdef",
+          "a3c45678-901d-4ef0-1234-56789abcdef0",
+          "b4d56789-012e-4f01-2345-6789abcdef01",
+          "c5e67890-123f-4012-3456-789abcdef012",
+          "d6f78901-2340-4123-4567-89abcdef0123"
+        ]
+      },
+      "cdn": {
+        "count": 8,
+        "assets": [
+          "e1a23456-789b-4cde-f012-3456789abcde",
+          "f2b34567-890c-4def-0123-456789abcdef",
+          "a3c45678-901d-4ef0-1234-56789abcdef0",
+          "b4d56789-012e-4f01-2345-6789abcdef01",
+          "c5e67890-123f-4012-3456-789abcdef012",
+          "d6f78901-2340-4123-4567-89abcdef0123",
+          "e7a89012-3451-4234-5678-9abcdef01234",
+          "f8b90123-4562-4345-6789-abcdef012345"
+        ]
+      },
+      "unique_ipv4": 12,
+      "unique_ipv6": 5
+    }
+  ]
+}
