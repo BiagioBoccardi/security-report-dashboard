@@ -1,27 +1,17 @@
 version: 2.1
 
 # ──────────────────────────────────────────────────────────────────────────
-# Pipeline CI/CD — CircleCI
+# Pipeline CI — CircleCI
 #
-# Flusso:
-#   push → qualsiasi branch  → test-frontend + test-backend
-#   push → main              → + deploy-frontend + deploy-backend
+# Responsabilità:
+#   CircleCI  → esegue i test su ogni push/PR
+#   Vercel    → deploya il frontend automaticamente ad ogni push su main
+#   Render    → deploya il backend automaticamente ad ogni push su main
 #
-# Variabili d'ambiente da configurare in:
-#   CircleCI → Project Settings → Environment Variables
-#
-#   VERCEL_TOKEN             – vercel.com → Account Settings → Tokens
-#   VERCEL_ORG_ID            – vercel.com → Team Settings → General → Team ID
-#   VERCEL_PROJECT_ID        – vercel.com → Project Settings → General → Project ID
-#   VITE_API_URL             – URL del backend Render (es. https://security-report-dashboard.onrender.com)
-#   RENDER_DEPLOY_HOOK_URL   – Render → Service → Settings → Deploy Hook
+# Nessuna variabile d'ambiente richiesta per i test.
 # ──────────────────────────────────────────────────────────────────────────
 
 jobs:
-
-  # ════════════════════════════════════════════════════════════════════════
-  # QUALITY GATES
-  # ════════════════════════════════════════════════════════════════════════
 
   test-frontend:
     docker:
@@ -55,13 +45,9 @@ jobs:
           command: npm run lint
 
       - run:
-          name: Production build
+          name: Build
           working_directory: frontend
           command: npm run build
-          environment:
-            VITE_API_URL: $VITE_API_URL
-
-  # ──────────────────────────────────────────────────────────────────────
 
   test-backend:
     docker:
@@ -85,91 +71,12 @@ jobs:
             - ~/.local/lib/python3.12/site-packages
 
       - run:
-          name: Run pytest (103 tests)
+          name: Run pytest
           working_directory: backend
           command: python -m pytest -v --tb=short
 
-  # ════════════════════════════════════════════════════════════════════════
-  # DEPLOY  (solo su branch main)
-  # ════════════════════════════════════════════════════════════════════════
-
-  deploy-frontend:
-    docker:
-      - image: cimg/node:22.12
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - npm-v1-{{ checksum "frontend/package-lock.json" }}
-
-      - run:
-          name: Install dependencies
-          working_directory: frontend
-          command: npm ci
-
-      - run:
-          name: Verify Vercel env vars
-          command: |
-            echo "VERCEL_TOKEN length: ${#VERCEL_TOKEN}"
-            echo "VERCEL_ORG_ID: $VERCEL_ORG_ID"
-            echo "VERCEL_PROJECT_ID: $VERCEL_PROJECT_ID"
-
-      - run:
-          name: Pull Vercel project settings
-          working_directory: frontend
-          command: npx vercel@latest pull --yes --environment=production
-
-      - run:
-          name: Build via Vercel CLI
-          working_directory: frontend
-          command: npx vercel@latest build --prod
-
-      - run:
-          name: Deploy to Vercel production
-          working_directory: frontend
-          command: |
-            URL=$(npx vercel@latest deploy --prebuilt --prod)
-            echo "✅ Frontend deployed → $URL"
-
-  # ──────────────────────────────────────────────────────────────────────
-
-  deploy-backend:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run:
-          name: Trigger Render deploy hook
-          command: |
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-              -X POST "$RENDER_DEPLOY_HOOK_URL")
-            echo "Render webhook response: HTTP $HTTP_STATUS"
-            if [[ "$HTTP_STATUS" -lt 200 || "$HTTP_STATUS" -ge 300 ]]; then
-              echo "❌ Render deploy hook failed (HTTP $HTTP_STATUS)"
-              exit 1
-            fi
-            echo "✅ Render deploy triggered successfully"
-
-# ──────────────────────────────────────────────────────────────────────────
-# WORKFLOW
-# ──────────────────────────────────────────────────────────────────────────
-
 workflows:
-  ci-cd:
+  ci:
     jobs:
       - test-frontend
       - test-backend
-
-      - deploy-frontend:
-          requires:
-            - test-frontend
-          filters:
-            branches:
-              only: main
-
-      - deploy-backend:
-          requires:
-            - test-backend
-          filters:
-            branches:
-              only: main
