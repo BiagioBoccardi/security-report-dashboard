@@ -138,7 +138,7 @@ export const ImportData: React.FC<Props> = ({ onClose }) => {
                     )}
                   </div>
                   <p style={{ color: 'var(--c-muted)' }} className="text-xs">
-                    Formato Cybersonar · Max 10 MB
+                    Formato JSON · Max 10 MB
                   </p>
                 </div>
                 <input ref={inputRef} type="file" accept=".json" className="hidden" onChange={onInputChange} />
