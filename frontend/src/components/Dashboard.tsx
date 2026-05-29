@@ -252,19 +252,19 @@ export const Dashboard: React.FC = () => {
           {tab === 'overview' && (
             <motion.div key="overview" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
               {/* Risk Banner */}
-              <div className={`shimmer-wrap bg-gradient-to-r ${riskGradient(riskScore)} text-white rounded-2xl p-8 shadow-2xl`}>
-                <div className="flex items-center justify-between gap-6">
+              <div className={`shimmer-wrap bg-gradient-to-r ${riskGradient(riskScore)} text-white rounded-2xl p-6 sm:p-8 shadow-2xl`}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-widest opacity-70 mb-2">{t.risk_score}</p>
                     <div className="flex items-end gap-3">
-                      <span className="text-8xl font-black leading-none">{riskScore}</span>
-                      <span className="text-2xl font-light opacity-60 mb-2">/ 100</span>
+                      <span className="text-6xl sm:text-8xl font-black leading-none">{riskScore}</span>
+                      <span className="text-xl sm:text-2xl font-light opacity-60 mb-2">/ 100</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-4xl font-black mb-1">{riskLabel}</p>
+                  <div className="sm:text-right">
+                    <p className="text-2xl sm:text-4xl font-black mb-1">{riskLabel}</p>
                     <p className="text-sm opacity-70">{t.risk_action}</p>
-                    <div className="mt-4 flex gap-2 justify-end items-center text-xs opacity-60">
+                    <div className="mt-3 sm:mt-4 flex gap-2 sm:justify-end items-center text-xs opacity-60">
                       <span>{t.risk_poweredBy}</span>
                       <img src="/digimetrica-full-inverted-transparent@2x.png" alt="Digimetrica" className="h-4" />
                     </div>

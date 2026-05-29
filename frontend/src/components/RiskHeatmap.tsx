@@ -27,7 +27,7 @@ export const RiskHeatmap: React.FC<Props> = ({ vulns }) => {
                   const intensity = Math.min(count / 10, 1)
                   return (
                     <td key={s} className="py-2 text-center">
-                      <div className="mx-auto w-14 h-10 rounded-lg flex items-center justify-center text-xs font-bold text-white"
+                      <div className="mx-auto w-10 h-8 sm:w-14 sm:h-10 rounded-lg flex items-center justify-center text-xs font-bold text-white"
                         style={{ backgroundColor: SEVERITY_COLORS[s], opacity: count === 0 ? 0.08 : 0.15 + intensity * 0.85 }}>
                         {count}
                       </div>

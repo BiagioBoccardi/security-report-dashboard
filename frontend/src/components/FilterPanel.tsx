@@ -18,9 +18,9 @@ export const FilterPanel: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: card, border: `1px solid ${border}` }} className="rounded-2xl px-5 py-4 shadow-lg flex flex-wrap items-center gap-4">
+    <div style={{ backgroundColor: card, border: `1px solid ${border}` }} className="rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-lg flex flex-wrap items-center gap-2 sm:gap-4">
       <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide">Severity:</span>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {SEVERITIES.map((s) => (
           <button
             key={s}
@@ -30,15 +30,15 @@ export const FilterPanel: React.FC = () => {
               border: `1px solid ${selectedSeverity.includes(s) ? SEVERITY_COLORS[s] : 'transparent'}`,
               color: selectedSeverity.includes(s) ? SEVERITY_COLORS[s] : muted,
             }}
-            className="px-3 py-1 rounded-full text-xs font-medium transition-all capitalize"
+            className="px-2.5 py-1 rounded-full text-xs font-medium transition-all capitalize min-h-[32px]"
           >
             {s}
           </button>
         ))}
       </div>
 
-      <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide ml-2">Status:</span>
-      <div className="flex gap-2">
+      <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide sm:ml-2">Status:</span>
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {(['all', 'active', 'passive'] as const).map((st) => (
           <button
             key={st}
@@ -48,7 +48,7 @@ export const FilterPanel: React.FC = () => {
               border: `1px solid ${selectedStatus === st ? '#60a5fa' : 'transparent'}`,
               color: selectedStatus === st ? '#60a5fa' : muted,
             }}
-            className="px-3 py-1 rounded-full text-xs font-medium transition-all capitalize"
+            className="px-2.5 py-1 rounded-full text-xs font-medium transition-all capitalize min-h-[32px]"
           >
             {st}
           </button>
@@ -56,7 +56,7 @@ export const FilterPanel: React.FC = () => {
       </div>
 
       {(selectedSeverity.length > 0 || selectedStatus !== 'all') && (
-        <button onClick={clearFilters} style={{ color: muted }} className="ml-auto text-xs hover:text-white underline transition-colors">
+        <button onClick={clearFilters} style={{ color: muted }} className="w-full sm:w-auto sm:ml-auto text-xs hover:text-white underline transition-colors text-center py-1">
           Reset
         </button>
       )}

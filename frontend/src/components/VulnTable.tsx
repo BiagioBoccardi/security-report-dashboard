@@ -103,7 +103,10 @@ export const VulnTable: React.FC<Props> = ({ vulns }) => {
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {HEADERS.map(h => (
-                <th key={h} style={{ color: 'var(--c-muted)' }} className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap">
+                <th key={h} style={{ color: 'var(--c-muted)' }}
+                  className={`px-3 sm:px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap
+                    ${h === 'Trend (7g)' || h === 'Distribuzione' ? 'hidden sm:table-cell' : ''}
+                    ${h === 'Passive' ? 'hidden md:table-cell' : ''}`}>
                   {h}
                 </th>
               ))}
@@ -128,27 +131,27 @@ export const VulnTable: React.FC<Props> = ({ vulns }) => {
               return (
                 <tr key={row.severity} style={{ borderBottom: '1px solid var(--border)' }} className="hover:opacity-80 transition-opacity">
                   {/* Severity badge */}
-                  <td className="px-6 py-4">
-                    <span style={{ backgroundColor: color + '22', color, border: `1px solid ${color}44` }} className="px-2.5 py-0.5 rounded-full text-xs font-bold capitalize">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
+                    <span style={{ backgroundColor: color + '22', color, border: `1px solid ${color}44` }} className="px-2 py-0.5 rounded-full text-xs font-bold capitalize">
                       {row.severity}
                     </span>
                   </td>
 
                   {/* Totale */}
-                  <td style={{ color: 'var(--c-text)' }} className="px-6 py-4 font-black text-lg">{row.total}</td>
+                  <td style={{ color: 'var(--c-text)' }} className="px-3 sm:px-6 py-3 sm:py-4 font-black text-base sm:text-lg">{row.total}</td>
 
                   {/* Attive */}
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4">
                     <span style={{ color: '#ef4444' }} className="font-semibold">{row.active}</span>
                   </td>
 
-                  {/* Passive */}
-                  <td className="px-6 py-4">
+                  {/* Passive — hidden on mobile */}
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
                     <span style={{ color: '#f97316' }} className="font-semibold">{row.passive}</span>
                   </td>
 
-                  {/* Trend sparkline + label */}
-                  <td className="px-6 py-4">
+                  {/* Trend — hidden on mobile */}
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
                     <div className="flex items-center gap-2">
                       <MiniSparkline values={spark} color={color} />
                       <div className="flex items-center gap-1">
@@ -158,9 +161,9 @@ export const VulnTable: React.FC<Props> = ({ vulns }) => {
                     </div>
                   </td>
 
-                  {/* Distribution bar */}
-                  <td className="px-6 py-4 w-36">
-                    <div style={{ backgroundColor: 'var(--bg-card-hi)' }} className="h-2 rounded-full overflow-hidden">
+                  {/* Distribution bar — hidden on mobile */}
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 hidden sm:table-cell">
+                    <div style={{ backgroundColor: 'var(--bg-card-hi)' }} className="h-2 rounded-full overflow-hidden w-24 sm:w-36">
                       <div style={{ width: `${pct}%`, backgroundColor: color }} className="h-full rounded-full transition-all" />
                     </div>
                     <span style={{ color: 'var(--c-muted)' }} className="text-xs mt-1 block">{pct.toFixed(0)}%</span>
@@ -172,11 +175,11 @@ export const VulnTable: React.FC<Props> = ({ vulns }) => {
 
           <tfoot>
             <tr style={{ backgroundColor: 'var(--bg-card-hi)' }}>
-              <td style={{ color: 'var(--c-muted)' }} className="px-6 py-3 text-xs font-semibold uppercase">Totale</td>
-              <td style={{ color: 'var(--c-text)' }} className="px-6 py-3 font-black text-lg">{totals.total}</td>
-              <td style={{ color: '#ef4444' }} className="px-6 py-3 font-bold">{totals.active}</td>
-              <td style={{ color: '#f97316' }} className="px-6 py-3 font-bold">{totals.passive}</td>
-              <td /><td />
+              <td style={{ color: 'var(--c-muted)' }} className="px-3 sm:px-6 py-3 text-xs font-semibold uppercase">Totale</td>
+              <td style={{ color: 'var(--c-text)' }} className="px-3 sm:px-6 py-3 font-black text-base sm:text-lg">{totals.total}</td>
+              <td style={{ color: '#ef4444' }} className="px-3 sm:px-6 py-3 font-bold">{totals.active}</td>
+              <td style={{ color: '#f97316' }} className="px-3 sm:px-6 py-3 font-bold hidden md:table-cell">{totals.passive}</td>
+              <td className="hidden sm:table-cell" /><td className="hidden sm:table-cell" />
             </tr>
           </tfoot>
         </table>
