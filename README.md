@@ -2,7 +2,7 @@
 
 > Dashboard interattiva per la visualizzazione e l'analisi di report di sicurezza Cybersonar — sviluppata per **Digimetrica S.r.l.**
 
-![CI](https://github.com/BiagioBoccardi/security-report-dashboard/actions/workflows/ci.yml/badge.svg)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/BiagioBoccardi/security-report-dashboard/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/BiagioBoccardi/security-report-dashboard/tree/main)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
@@ -20,7 +20,7 @@
 | **Data Leaks** | Domain Stealer · Potential Stealer · Other Stealer (total / resolved / unresolved) |
 | **Certificates** | SSL/TLS active vs expired · Certificate score · Email Security DMARC/Blacklist |
 
-> Demo live: [security-report-dashboard.vercel.app](https://security-report-dashboard.vercel.app) *(deploy in corso)*
+> 🔗 Demo live: **[security-report-dashboard-sigma.vercel.app](https://security-report-dashboard-sigma.vercel.app)**
 
 ---
 
@@ -58,8 +58,10 @@
 |---|---|
 | **React Error Boundary** | Fallback UI professionale per errori runtime |
 | **Skeleton Loading** | Placeholder bones (stile LinkedIn) durante il caricamento |
-| **GitHub Actions CI/CD** | TypeScript check + build ad ogni push |
+| **CircleCI CI/CD** | 103 test pytest + TypeScript check + build ad ogni push |
 | **CSS Variables Theme** | Sistema di theming completo dark/light via CSS custom properties |
+| **Responsive + Mobile Sidebar** | Sidebar animata con navigazione touch-friendly su smartphone |
+| **i18n 10 lingue** | Toggle IT/EN/ES/FR/DE/PT/ZH/JA/RU/AR con cambio real-time |
 
 ---
 
@@ -128,11 +130,14 @@ docker-compose up
 |---|---|---|
 | `GET` | `/health` | Health check |
 | `GET` | `/api/v1/reports` | Lista report |
-| `GET` | `/api/v1/reports/{id}` | Dettaglio report |
-| `GET` | `/api/v1/reports/{id}/vulnerabilities` | Vulnerabilità (filtri: severity, status, limit) |
-| `GET` | `/api/v1/reports/{id}/analytics` | Trend 7 giorni + distribuzione |
-| `GET` | `/api/v1/reports/{id}/export?format=csv` | Export CSV |
-| `GET` | `/api/v1/reports/{id}/export?format=json` | Export JSON |
+| `GET` | `/api/v1/reports/{id}` | Dettaglio report completo |
+| `GET` | `/api/v1/reports/{id}/vulnerabilities` | Vulnerabilità (filtri: severity, status, limit, offset) |
+| `GET` | `/api/v1/reports/{id}/analytics` | Trend 7 giorni + distribuzione + porte |
+| `GET` | `/api/v1/reports/{id}/export?format=csv` | Export CSV vulnerabilità |
+| `GET` | `/api/v1/reports/{id}/export?format=json` | Export JSON report completo |
+| `POST` | `/api/v1/reports/upload` | Upload nuovo report JSON |
+
+> 📖 Swagger UI interattivo disponibile su `http://localhost:8000/docs` quando il backend è in esecuzione.
 
 ---
 
@@ -187,7 +192,7 @@ API_PORT=8000
 | Servizio | Configurazione |
 |---|---|
 | **Vercel** (Frontend) | Root: `frontend` · Build: `npm run build` · Output: `dist` |
-| **Railway** (Backend) | Root: `backend` · Start: `uvicorn main:app --host 0.0.0.0` |
+| **Render** (Backend) | Root: `backend` · Environment: Docker · Auto-deploy da GitHub |
 
 ---
 

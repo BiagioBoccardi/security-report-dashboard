@@ -29,7 +29,7 @@ export interface SecurityReport {
   idsummary: string
   summary_text: string
   summary_text_en: string
-  risk_score: number | string
+  risk_score: number
   creation_date: string
   last_edit: string
   domain_name: string

@@ -37,7 +37,8 @@ function generate(r: SecurityReport): Rec[] {
   if (r.waf.count < r.n_asset / 10)
     recs.push({ priority: 'medium', title: `Estendere WAF a più asset`, description: `Solo ${r.waf.count} asset su ${r.n_asset} risultano protetti da WAF.`, action: 'Estendere copertura WAF' })
 
-  recs.push({ priority: 'low', title: 'Pianificare vulnerability assessment periodico', description: 'Con 162 vulnerabilità totali, è consigliato un ciclo di revisione trimestrale.', action: 'Schedulare prossimo assessment' })
+  const totalVulns = Object.values(r.n_vulns.total).reduce((a, b) => a + b, 0)
+  recs.push({ priority: 'low', title: 'Pianificare vulnerability assessment periodico', description: `Con ${totalVulns} vulnerabilità totali rilevate, è consigliato un ciclo di revisione trimestrale.`, action: 'Schedulare prossimo assessment' })
 
   const order = { critical: 0, high: 1, medium: 2, low: 3 }
   return recs.sort((a, b) => order[a.priority] - order[b.priority])
