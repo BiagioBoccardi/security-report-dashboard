@@ -221,9 +221,22 @@ export const Dashboard: React.FC = () => {
               <span className="hidden sm:inline">{t.btn_import}</span>
             </button>
 
-            <ReportExport reportId={r.idsummary} />
+            {/* Export — hidden on mobile (inside sidebar) */}
+            <div className="hidden sm:block">
+              <ReportExport reportId={r.idsummary} />
+            </div>
 
-            {/* Print, Language, Theme — hidden on mobile (inside sidebar) */}
+            {/* Print — visible on mobile, hidden on desktop */}
+            <button
+              onClick={() => window.print()}
+              title={t.btn_print}
+              style={{ backgroundColor: 'var(--bg-card-hi)', border: '1px solid var(--border)', color: 'var(--c-muted)' }}
+              className="flex sm:hidden p-2 rounded-lg hover:opacity-80 transition-opacity"
+            >
+              <Printer className="w-4 h-4" />
+            </button>
+
+            {/* Print — visible on desktop too */}
             <button
               onClick={() => window.print()}
               title={t.btn_print}
