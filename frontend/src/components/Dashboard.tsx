@@ -382,12 +382,7 @@ export const Dashboard: React.FC = () => {
           {/* ══════════ VULNERABILITIES ══════════ */}
           {tab === 'vulnerabilities' && (
             <motion.div key="vulns" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <FilterPanel />
-                </div>
-                <SearchBar />
-              </div>
+              <FilterPanel />
               <VulnTable vulns={r.n_vulns} />
             </motion.div>
           )}

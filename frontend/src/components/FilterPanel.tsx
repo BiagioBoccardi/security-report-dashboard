@@ -1,4 +1,5 @@
 import React from 'react'
+import { Search } from 'lucide-react'
 import { useFilterStore } from '@/store/filterStore'
 import { SEVERITIES } from '@/utils/constants'
 import { SEVERITY_COLORS } from '@/utils/colors'
@@ -10,7 +11,7 @@ const muted = '#7a90b8'
 const chip = '#1c2f5a'
 
 export const FilterPanel: React.FC = () => {
-  const { selectedSeverity, selectedStatus, setSeverity, setStatus, clearFilters } = useFilterStore()
+  const { selectedSeverity, selectedStatus, searchTerm, setSeverity, setStatus, setSearch, clearFilters } = useFilterStore()
 
   const toggleSeverity = (s: Severity) => {
     if (selectedSeverity.includes(s)) setSeverity(selectedSeverity.filter((x) => x !== s))
@@ -18,7 +19,8 @@ export const FilterPanel: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: card, border: `1px solid ${border}` }} className="rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-lg flex flex-wrap items-center gap-2 sm:gap-4">
+    <div style={{ backgroundColor: card, border: `1px solid ${border}` }} className="rounded-2xl px-4 py-3 sm:px-5 sm:py-4 shadow-lg flex flex-wrap items-center gap-2 sm:gap-3">
+
       <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide">Severity:</span>
       <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {SEVERITIES.map((s) => (
@@ -37,7 +39,7 @@ export const FilterPanel: React.FC = () => {
         ))}
       </div>
 
-      <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide sm:ml-2">Status:</span>
+      <span style={{ color: muted }} className="text-xs font-semibold uppercase tracking-wide">Status:</span>
       <div className="flex flex-wrap gap-1.5 sm:gap-2">
         {(['all', 'active', 'passive'] as const).map((st) => (
           <button
@@ -55,8 +57,29 @@ export const FilterPanel: React.FC = () => {
         ))}
       </div>
 
-      {(selectedSeverity.length > 0 || selectedStatus !== 'all') && (
-        <button onClick={clearFilters} style={{ color: muted }} className="w-full sm:w-auto sm:ml-auto text-xs hover:text-white underline transition-colors text-center py-1">
+      {/* Search inline */}
+      <div className="relative ml-auto">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: muted }} />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cerca severity..."
+          style={{
+            backgroundColor: chip,
+            border: `1px solid ${border}`,
+            color: '#f0f4ff',
+          }}
+          className="pl-8 pr-3 py-1.5 w-36 sm:w-44 text-xs rounded-full focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-[#7a90b8]"
+        />
+      </div>
+
+      {(selectedSeverity.length > 0 || selectedStatus !== 'all' || searchTerm) && (
+        <button
+          onClick={clearFilters}
+          style={{ color: muted }}
+          className="text-xs hover:text-white underline transition-colors py-1"
+        >
           Reset
         </button>
       )}
