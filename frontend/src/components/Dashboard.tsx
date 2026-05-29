@@ -349,7 +349,7 @@ export const Dashboard: React.FC = () => {
 
               <ScoreBreakdown report={r} />
               <Recommendations report={r} />
-              <ExecutiveSummary text={r.summary_text_en} />
+              <ExecutiveSummary textIt={r.summary_text} textEn={r.summary_text_en} />
               <SecurityInfrastructure report={r} />
             </motion.div>
           )}

@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { ChevronDown, ChevronUp, FileText } from 'lucide-react'
 
 interface Props {
-  text: string
-  lang?: 'it' | 'en'
+  textIt: string
+  textEn: string
 }
 
 function parseSections(text: string): Array<{ title: string; body: string }> {
@@ -24,12 +24,18 @@ function parseSections(text: string): Array<{ title: string; body: string }> {
 const ICONS: Record<string, string> = {
   'Overview': '📋',
   'Vulnerability': '🛡',
+  'Vulnerabilit': '🛡',
   'Exposure': '🌐',
+  'Esposizione': '🌐',
   'Services': '🌐',
+  'Servizi': '🌐',
   'Data Leakage': '💧',
+  'Fuga': '💧',
   'Certificates': '🔐',
-  'Technology': '🔐',
+  'Certificat': '🔐',
+  'Technology': '🔧',
   'Email Security': '📧',
+  'Email': '📧',
 }
 
 function getIcon(title: string): string {
@@ -39,9 +45,16 @@ function getIcon(title: string): string {
   return '📌'
 }
 
-export const ExecutiveSummary: React.FC<Props> = ({ text }) => {
+export const ExecutiveSummary: React.FC<Props> = ({ textIt, textEn }) => {
   const [expanded, setExpanded] = useState(true)
-  const sections = parseSections(text)
+  const [lang, setLang] = useState<'it' | 'en'>('en')
+
+  const sections = parseSections(lang === 'en' ? textEn : textIt)
+
+  const toggleLang = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setLang(l => l === 'en' ? 'it' : 'en')
+  }
 
   return (
     <div
@@ -49,25 +62,54 @@ export const ExecutiveSummary: React.FC<Props> = ({ text }) => {
       className="rounded-2xl shadow-lg overflow-hidden"
     >
       {/* Header */}
-      <button
-        onClick={() => setExpanded(e => !e)}
-        className="w-full flex items-center justify-between px-6 py-4 hover:opacity-80 transition-opacity"
-      >
-        <div className="flex items-center gap-3">
-          <FileText className="w-5 h-5" style={{ color: '#60a5fa' }} />
+      <div className="flex items-center justify-between px-6 py-4">
+        <button
+          onClick={() => setExpanded(e => !e)}
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-1 text-left"
+        >
+          <FileText className="w-5 h-5 flex-shrink-0" style={{ color: '#60a5fa' }} />
           <h3 style={{ color: 'var(--c-text)' }} className="text-base font-semibold">Executive Summary</h3>
-          <span
-            style={{ backgroundColor: '#60a5fa22', color: '#60a5fa', border: '1px solid #60a5fa44' }}
-            className="text-xs px-2 py-0.5 rounded-full font-medium"
+        </button>
+
+        <div className="flex items-center gap-2">
+          {/* IT / EN toggle */}
+          <div
+            style={{ backgroundColor: 'var(--bg-card-hi)', border: '1px solid var(--border)' }}
+            className="flex rounded-lg overflow-hidden text-xs font-semibold"
           >
-            EN
-          </span>
+            <button
+              onClick={toggleLang}
+              style={{
+                backgroundColor: lang === 'it' ? '#60a5fa' : 'transparent',
+                color: lang === 'it' ? '#fff' : 'var(--c-muted)',
+              }}
+              className="px-3 py-1.5 transition-colors"
+            >
+              IT
+            </button>
+            <button
+              onClick={toggleLang}
+              style={{
+                backgroundColor: lang === 'en' ? '#60a5fa' : 'transparent',
+                color: lang === 'en' ? '#fff' : 'var(--c-muted)',
+              }}
+              className="px-3 py-1.5 transition-colors"
+            >
+              EN
+            </button>
+          </div>
+
+          <button
+            onClick={() => setExpanded(e => !e)}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {expanded
+              ? <ChevronUp className="w-4 h-4" style={{ color: 'var(--c-muted)' }} />
+              : <ChevronDown className="w-4 h-4" style={{ color: 'var(--c-muted)' }} />
+            }
+          </button>
         </div>
-        {expanded
-          ? <ChevronUp className="w-4 h-4" style={{ color: 'var(--c-muted)' }} />
-          : <ChevronDown className="w-4 h-4" style={{ color: 'var(--c-muted)' }} />
-        }
-      </button>
+      </div>
 
       {expanded && (
         <div style={{ borderTop: '1px solid var(--border)' }} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
