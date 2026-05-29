@@ -18,7 +18,7 @@ export const SearchBar: React.FC = () => {
           border: '1px solid rgba(255,255,255,0.1)',
           color: '#f0f4ff',
         }}
-        className="pl-9 pr-4 py-2 w-32 sm:w-52 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-[#7a90b8]"
+        className="pl-9 pr-4 py-2 w-full sm:w-52 text-sm rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400 placeholder:text-[#7a90b8]"
       />
     </div>
   )

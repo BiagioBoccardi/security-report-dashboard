@@ -204,11 +204,6 @@ export const Dashboard: React.FC = () => {
 
           {/* Right — desktop: full controls | mobile: only import + export */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            {/* Search — hidden on mobile */}
-            <div className="hidden sm:block">
-              <SearchBar />
-            </div>
-
             <button
               onClick={() => setShowImport(true)}
               title={t.btn_import}
@@ -387,7 +382,12 @@ export const Dashboard: React.FC = () => {
           {/* ══════════ VULNERABILITIES ══════════ */}
           {tab === 'vulnerabilities' && (
             <motion.div key="vulns" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <FilterPanel />
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <FilterPanel />
+                </div>
+                <SearchBar />
+              </div>
               <VulnTable vulns={r.n_vulns} />
             </motion.div>
           )}
