@@ -27,6 +27,7 @@ import { CertificatesTable }       from './CertificatesTable'
 import { RiskHeatmap }             from './RiskHeatmap'
 import { VulnTable }               from './VulnTable'
 import { LanguageSwitcher }        from './LanguageSwitcher'
+import { MobileSidebar }          from './MobileSidebar'
 
 type Tab = 'overview' | 'analytics' | 'vulnerabilities' | 'leaks' | 'certificates'
 
@@ -104,6 +105,7 @@ export const Dashboard: React.FC = () => {
   const [tab, setTab] = useState<Tab>(getTabFromURL)
   const handleTab = (id: Tab) => { setTab(id); pushTab(id) }
   const [showImport, setShowImport] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   /* listen browser back/forward */
   useEffect(() => {
@@ -166,22 +168,51 @@ export const Dashboard: React.FC = () => {
         {showImport && <ImportData onClose={() => setShowImport(false)} />}
       </AnimatePresence>
 
+      {/* ── Mobile Sidebar ── */}
+      <MobileSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        tab={tab}
+        onTab={handleTab}
+        tabs={TABS}
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
+        onImport={() => setShowImport(true)}
+        onExport={() => {}}
+        onPrint={() => window.print()}
+        domainName={r.domain_name}
+      />
+
       {/* ── Header ── */}
       <header style={{ backgroundColor: 'var(--bg-header)' }} className="sticky top-0 z-20 shadow-xl no-print">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <img src="/digimetrica-full-inverted-transparent@2x.png" alt="Digimetrica" className="h-8" />
-            <div style={{ backgroundColor: 'var(--border)' }} className="h-5 w-px" />
-            <span style={{ color: 'var(--c-muted)' }} className="hidden md:block text-sm font-medium tracking-wide">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-2">
+
+          {/* Left — logo (mobile: hamburger trigger, desktop: logo + subtitle) */}
+          <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="flex items-center gap-2 sm:gap-0 flex-shrink-0"
+              title="Menu"
+            >
+              <img src="/digimetrica-full-inverted-transparent@2x.png" alt="Digimetrica" className="h-7 sm:h-8" />
+            </button>
+            <div style={{ backgroundColor: 'var(--border)' }} className="hidden sm:block h-5 w-px" />
+            <span style={{ color: 'var(--c-muted)' }} className="hidden md:block text-sm font-medium tracking-wide truncate">
               {t.header_subtitle}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <SearchBar />
+
+          {/* Right — desktop: full controls | mobile: only import + export */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Search — hidden on mobile */}
+            <div className="hidden sm:block">
+              <SearchBar />
+            </div>
+
             <button
               onClick={() => setShowImport(true)}
               title={t.btn_import}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-white transition-colors"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg text-sm font-medium text-white transition-colors"
               style={{ backgroundColor: '#065f46' }}
               onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#047857')}
               onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#065f46')}
@@ -189,21 +220,26 @@ export const Dashboard: React.FC = () => {
               <Upload className="w-4 h-4" />
               <span className="hidden sm:inline">{t.btn_import}</span>
             </button>
+
             <ReportExport reportId={r.idsummary} />
+
+            {/* Print, Language, Theme — hidden on mobile (inside sidebar) */}
             <button
               onClick={() => window.print()}
               title={t.btn_print}
               style={{ backgroundColor: 'var(--bg-card-hi)', border: '1px solid var(--border)', color: 'var(--c-muted)' }}
-              className="p-2 rounded-lg hover:opacity-80 transition-opacity"
+              className="hidden sm:flex p-2 rounded-lg hover:opacity-80 transition-opacity"
             >
               <Printer className="w-4 h-4" />
             </button>
-            <LanguageSwitcher />
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
             <button
               onClick={toggleTheme}
               title={isDark ? 'Light mode' : 'Dark mode'}
               style={{ backgroundColor: 'var(--bg-card-hi)', border: '1px solid var(--border)', color: 'var(--c-muted)' }}
-              className="p-2 rounded-lg hover:opacity-80 transition-opacity"
+              className="hidden sm:flex p-2 rounded-lg hover:opacity-80 transition-opacity"
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -213,9 +249,10 @@ export const Dashboard: React.FC = () => {
         {/* Animated glow line under header */}
         <div className="header-glow-line no-print" />
 
-        {/* ── Tabs ── */}
-        <div style={{ borderTop: '1px solid var(--border)' }} className="max-w-7xl mx-auto px-6">
-          <div className="flex">
+        {/* ── Tabs — hidden on mobile (use sidebar instead) ── */}
+        <div style={{ borderTop: '1px solid var(--border)' }} className="max-w-7xl mx-auto px-4 sm:px-6">
+          {/* Desktop tabs */}
+          <div className="hidden sm:flex overflow-x-auto">
             {TABS.map(({ id, label }) => (
               <button
                 key={id}
@@ -229,6 +266,20 @@ export const Dashboard: React.FC = () => {
                 {label}
               </button>
             ))}
+          </div>
+
+          {/* Mobile tab indicator — shows active tab name + tap logo hint */}
+          <div className="flex sm:hidden items-center justify-between py-2.5">
+            <span style={{ color: '#60a5fa' }} className="text-sm font-semibold">
+              {TABS.find(t => t.id === tab)?.label}
+            </span>
+            <button
+              onClick={() => setSidebarOpen(true)}
+              style={{ color: 'var(--c-muted)' }}
+              className="text-xs flex items-center gap-1"
+            >
+              ☰ Menu
+            </button>
           </div>
         </div>
       </header>
